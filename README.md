@@ -1,1 +1,3 @@
-# farmers_market
+# farmers_market_api
+
+Dan Seiders
