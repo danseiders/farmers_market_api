@@ -7,7 +7,7 @@ const app = express()
 require('dotenv').config()
 const PORT = process.env.PORT
 const MONGODB_URI = process.env.MONGODB_URI
-// const mongoConnection = `${MONGODB_URI}/farmStan`
+
 
 //MIDDLEWARE
 app.use(express.static('public'))
@@ -30,6 +30,11 @@ app.use('/farm', farmController)
 const userController = require('./controllers/users.js')
 app.use('/users', userController)
 
+const groceriesController = require('./controllers/groceries')
+app.use('/groceries', groceriesController)
+
+
+//index view to show deployment
 app.get('/', (req, res) => {
   res.send('🎉')
 })
