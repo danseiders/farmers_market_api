@@ -6,10 +6,33 @@ const users = express.Router()
 const User = require('../models/user.js')
 const jwt = require('jsonwebtoken')
 
+// Middleware
+const verifyToken = (req, res, next) => {
+  // Check if auth header was sent
+  const bearerHeader = req.headers['authorization']
+  if (typeof bearerHeader !== 'undefined') {
+    const bearerToken = bearerHeader.split(' ')[1]
+    req.token = bearerToken
+    next()
+  } else {
+    // No token; forbidden
+    res.status(403).json({ error: 'Forbidden' })
+  }
+}
+
+// Routes
+
 // index
-users.get('/', (req, res) => {
-  res.status(200).send({
-    message: 'user info goes here'
+users.get('/', verifyToken, (req, res) => {
+  const userData = jwt.verify(req.token, process.env.TOKEN_SECRET)
+  User.findById(userData.user.id, (err, foundUser) => {
+    if (err) {
+      res.status(400).json({ error: err })
+    } else {
+      res.status(200).send({
+        user: foundUser
+      })
+    }
   })
 })
 
@@ -34,7 +57,7 @@ users.post('/login', (req, res) => {
         }
 
         // create a token that will be sent back from the front end in the HEADER to verify the identity; this token will be used with middleware to verify
-        jwt.sign({ user }, 'ItsASecretToEverybody', (err, token) => {
+        jwt.sign({ user }, process.env.TOKEN_SECRET, (err, token) => {
           if (err) {
             res.status(400).json({ error: err })
           } else {
@@ -48,8 +71,6 @@ users.post('/login', (req, res) => {
         // https://github.com/bradtraversy/node_jwt_example/blob/master/app.js
         // https://www.youtube.com/watch?v=7nafaH9SddU
         // ***** ***** *****
-
-
 
       } else {
         res.status(400).json({ message: 'Invalid password' })
@@ -72,7 +93,7 @@ users.post('/new', (req, res) => {
       req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
       User.create(req.body, (err, createdUser) => {
         if (err) {
-          res.status(400).json({ error: message })
+          res.status(400).json({ error: err })
         } else {
           res.status(200).json({ newUser: createdUser })
         }
