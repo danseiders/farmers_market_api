@@ -12,6 +12,22 @@ users.get('/', (req, res) => {
   })
 })
 
+users.post('/login', (req, res) => {
+  User.find({ email: req.body.email }, (err, foundUser) => {
+    if (err) {
+      res.status(400).json({ error: err })
+    }
+    else if (foundUser.length === 0) {
+      res.status(400).json({ error: 'User not found' })
+    } else {
+      if (bcrypt.compareSync(req.body.password, foundUser[0].password)) {
+        res.status(200).json({ message: 'auth successful!' })
+      } else {
+        res.status(400).json({ message: 'Invalid password' })
+      }
+    }
+  })
+})
 
 users.post('/new', (req, res) => {
   User.find({ email: req.body.email }, (err, foundUser) => {
