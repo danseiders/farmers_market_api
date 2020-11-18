@@ -6,8 +6,25 @@ const users = express.Router()
 const User = require('../models/user.js')
 const jwt = require('jsonwebtoken')
 
+// Middleware
+const verifyToken = (req, res, next) => {
+  // Check if auth header was sent
+  const bearerHeader = req.headers['authorization']
+  if (typeof bearerHeader !== 'undefined') {
+    const bearerToken = bearerHeader.split(' ')[1]
+    console.log(bearerToken)
+    next()
+  } else {
+    // No token; forbidden
+    res.status(403).json({ error: 'Forbidden' })
+  }
+}
+
+
+// Routes
+
 // index
-users.get('/', (req, res) => {
+users.get('/', verifyToken, (req, res) => {
   res.status(200).send({
     message: 'user info goes here'
   })
