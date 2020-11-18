@@ -6,7 +6,8 @@ const app = express()
 // Configuration
 require('dotenv').config()
 const PORT = process.env.PORT
-const mongoConnection = process.env.MONGODB_URI
+const MONGODB_URI = process.env.MONGODB_URI
+// const mongoConnection = `${MONGODB_URI}/farmStan`
 
 //MIDDLEWARE
 app.use(express.static('public'))
@@ -14,12 +15,12 @@ app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
 //DATABASE
-mongoose.connect(mongoConnection, {
+mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false
 }, () => {
-  console.log(`Connected to MONGODB at ${mongoConnection}`)
+  console.log(`Connected to MONGODB at ${MONGODB_URI}`)
 })
 
 // Controllers
