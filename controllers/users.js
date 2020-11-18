@@ -102,4 +102,22 @@ users.post('/new', (req, res) => {
   })
 })
 
+users.put('/update', verifyToken, (req, res) => {
+  const user = jwt.verify(req.token, process.env.TOKEN_SECRET)
+  req.body.password = req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
+  User.findByIdAndUpdate(user.user.id, req.body, (err, userToUpdate) => {
+    if (err) {
+      res.status(400).json({ error: err })
+    } else {
+      User.findById(userToUpdate._id, (err, updatedUser) => {
+        if (err) {
+          res.status(400).json({ error: err })
+        } else {
+          res.status(200).json({ user: updatedUser })
+        }
+      })
+    }
+  }) 
+})
+
 module.exports = users
