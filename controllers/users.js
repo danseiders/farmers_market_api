@@ -14,13 +14,22 @@ users.get('/', (req, res) => {
 
 
 users.post('/new', (req, res) => {
-  User.find({ username: req.body.username }, (err, foundUser) => {
-    if (foundUser.length > 0) {
+  User.find({ email: req.body.email }, (err, foundUser) => {
+    if (err) {
+      res.status(400).json({ error: err })
+    }
+    else if (foundUser.length > 0) {
+      console.log(req.body)
+      console.log(foundUser)
       res.status(400).json({ error: 'User already exists' })
     } else {
       req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
       User.create(req.body, (err, createdUser) => {
-        res.status(200).json({ newUser: createdUser })
+        if (err) {
+          res.status(400).json({ error: message })
+        } else {
+          res.status(200).json({ newUser: createdUser })
+        }
       })
     }
   })
