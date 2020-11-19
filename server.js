@@ -38,8 +38,8 @@ mongoose.connect(MONGODB_URI, {
 })
 
 // Controllers
-const farmController = require('./controllers/farm.js')
-app.use('/farm', farmController)
+const farmController = require('./controllers/farms.js')
+app.use('/farms', farmController)
 
 const userController = require('./controllers/users.js')
 app.use('/users', userController)
