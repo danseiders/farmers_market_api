@@ -1,5 +1,4 @@
 const express = require('express')
-const { isRegExp } = require('util')
 const Farm = require('../models/farm')
 
 const farm = express.Router()
@@ -18,7 +17,7 @@ farm.get('/', (req, res) => {
 farm.post('/', (req, res) => {
   Farm.create(req.body, (error, createdFarm) => {
     if(error){
-      res.status(400).json({ error: error, message })
+      res.status(400).json({ error: error.message })
     }
     res.status(200).send(createdFarm)
   })
