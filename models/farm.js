@@ -12,7 +12,8 @@ const farmSchema = mongoose.Schema({
   phoneNumber: String,
   location: String,
   email: String,
-  items: []
+  items: [String],
+  market: String
 })
 
 const Farm = mongoose.model('Farm', farmSchema)

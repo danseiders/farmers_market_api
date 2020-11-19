@@ -21,7 +21,7 @@ const corsOptions = {
     }
 }
 
-app.use(cors(corsOptions))
+// app.use(cors(corsOptions))
 
 //MIDDLEWARE
 app.use(express.static('public'))
@@ -47,6 +47,8 @@ app.use('/users', userController)
 const groceriesController = require('./controllers/groceries')
 app.use('/groceries', groceriesController)
 
+const marketController = require('./controllers/markets.js')
+app.use('/markets', marketController)
 
 //index view to show deployment
 app.get('/', (req, res) => {
