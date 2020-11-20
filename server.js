@@ -21,7 +21,7 @@ const corsOptions = {
     }
 }
 
-app.use(cors(corsOptions))
+// app.use(cors(corsOptions))
 
 //MIDDLEWARE
 app.use(express.static('public'))
@@ -38,8 +38,8 @@ mongoose.connect(MONGODB_URI, {
 })
 
 // Controllers
-const farmController = require('./controllers/farm.js')
-app.use('/farm', farmController)
+const farmController = require('./controllers/farms.js')
+app.use('/farms', farmController)
 
 const userController = require('./controllers/users.js')
 app.use('/users', userController)
@@ -47,6 +47,8 @@ app.use('/users', userController)
 const groceriesController = require('./controllers/groceries')
 app.use('/groceries', groceriesController)
 
+const marketController = require('./controllers/markets.js')
+app.use('/markets', marketController)
 
 //index view to show deployment
 app.get('/', (req, res) => {
