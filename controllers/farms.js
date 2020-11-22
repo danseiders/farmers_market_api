@@ -1,6 +1,8 @@
 const express = require('express')
 const Farm = require('../models/farm')
+const Groceries = require('../models/groceries')
 const jwt = require('jsonwebtoken')
+const GroceryItem = require('../models/groceries')
 
 const farm = express.Router()
 
@@ -23,7 +25,13 @@ farm.get('/', (req, res) => {
     if(error){
       res.status(400).json({error: error.message})
     }
-    res.status(200).send(foundFarm)
+    Groceries.find({}, (err, grocereyItem) => {
+      res.status(200).json({
+        farm: foundFarm,
+        groceries: grocereyItem
+      })
+
+    })
 })
 })
 
@@ -37,6 +45,30 @@ farm.post('/', verifyToken, (req, res) => {
       res.status(400).json({ error: error.message })
     }
     res.status(200).send(createdFarm)
+  })
+})
+
+farm.get('/:id', (req, res) => {
+  Farm.findById(req.params.id, (err, foundFarm) => {
+    if (err) {
+      res.status(400).json({
+        error: err
+      })
+    } else {
+      const items = []
+      Groceries.find({}, (err, groceries) => {
+        if (err) {
+          res.status(400).json({
+            error: err
+          })
+        } else {
+          res.status(200).json({
+            farm: foundFarm,
+            groceries: groceries
+          })
+        }
+      })
+    }
   })
 })
 
