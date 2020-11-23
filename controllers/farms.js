@@ -2,8 +2,8 @@ const express = require('express')
 const Farm = require('../models/farm')
 const User = require('../models/user')
 const Groceries = require('../models/groceries')
+const Market = require('../models/market.js')
 const jwt = require('jsonwebtoken')
-const GroceryItem = require('../models/groceries')
 
 const farm = express.Router()
 
@@ -17,9 +17,18 @@ farm.get('/', (req, res) => {
         farm.password = ''
       })
       Groceries.find({}, (err, grocereyItem) => {
-        res.status(200).json({
-          farm: foundFarm,
-          groceries: grocereyItem
+        Market.find({}, (err, foundMarkets) => {
+          if (err) {
+            res.status(400).json({
+              error: err
+            })
+          } else {
+            res.status(200).json({
+              farm: foundFarm,
+              groceries: grocereyItem,
+              markets: foundMarkets
+            })
+          }
         })
       })
     }
