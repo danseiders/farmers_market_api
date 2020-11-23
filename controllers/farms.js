@@ -7,19 +7,6 @@ const GroceryItem = require('../models/groceries')
 
 const farm = express.Router()
 
-const verifyToken = (req, res, next) => {
-  // Check if auth header was sent
-  const bearerHeader = req.headers['authorization']
-  if (typeof bearerHeader !== 'undefined') {
-    const bearerToken = bearerHeader.split(' ')[1]
-    req.token = bearerToken
-    next()
-  } else {
-    // No token; forbidden
-    res.status(403).json({ error: 'Forbidden' })
-  }
-}
-
 //Index
 farm.get('/', (req, res) => {
   User.find({}, (error, foundFarm) => {
@@ -40,10 +27,7 @@ farm.get('/', (req, res) => {
 })
 
 //Create
-farm.post('/', verifyToken, (req, res) => {
-  const userData = jwt.verify(req.token, process.env.TOKEN_SECRET)
-  // assign owner id to farm
-  req.body.owner = userData.user.id
+farm.post('/', (req, res) => {
   Farm.create(req.body, (error, createdFarm) => {
     if(error){
       res.status(400).json({ error: error.message })
@@ -77,7 +61,7 @@ farm.get('/:id', (req, res) => {
 })
 
 //Delete
-farm.delete('/:id', verifyToken, (req, res) => {
+farm.delete('/:id', (req, res) => {
   Farm.findByIdAndRemove(req.params.id, (error, deletedFarm) => {
     if(error){
       res.status(400).json({ error: error.message })
@@ -87,7 +71,7 @@ farm.delete('/:id', verifyToken, (req, res) => {
 })
 
 //update
-farm.put('/:id', verifyToken, (req, res) => {
+farm.put('/:id', (req, res) => {
   Farm.findByIdAndUpdate(req.params.id, req.body, { new: true }, (error, updatedFarm) => {
     if(error) {
       res.status(400).json({ error: error.message })
