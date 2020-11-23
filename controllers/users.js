@@ -66,7 +66,6 @@ users.post('/login', (req, res) => {
         })
 
         // ***** to-do! *****
-        // add middleware to check and verify token
         // Make sure to credit Brad Traversy
         // https://github.com/bradtraversy/node_jwt_example/blob/master/app.js
         // https://www.youtube.com/watch?v=7nafaH9SddU
@@ -118,6 +117,21 @@ users.put('/update', verifyToken, (req, res) => {
       })
     }
   }) 
+})
+
+users.delete('/delete', verifyToken, (req, res) => {
+  const userData = jwt.verify(req.token, process.env.TOKEN_SECRET)
+  User.findByIdAndRemove(userData.user.id, (err, deletedUser) => {
+    if (err) {
+      res.status(400).json({
+        error: err
+      })
+    } else {
+      res.status(200).json({
+        deletedUser
+      })
+    }
+  })
 })
 
 module.exports = users

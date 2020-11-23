@@ -1,6 +1,9 @@
 const express = require('express')
 const Farm = require('../models/farm')
+const User = require('../models/user')
+const Groceries = require('../models/groceries')
 const jwt = require('jsonwebtoken')
+const GroceryItem = require('../models/groceries')
 
 const farm = express.Router()
 
@@ -19,11 +22,20 @@ const verifyToken = (req, res, next) => {
 
 //Index
 farm.get('/', (req, res) => {
-  Farm.find({}, (error, foundFarm) => {
+  User.find({}, (error, foundFarm) => {
     if(error){
       res.status(400).json({error: error.message})
+    } else {
+      foundFarm.forEach(farm => {
+        farm.password = ''
+      })
+      Groceries.find({}, (err, grocereyItem) => {
+        res.status(200).json({
+          farm: foundFarm,
+          groceries: grocereyItem
+        })
+      })
     }
-    res.status(200).send(foundFarm)
 })
 })
 
@@ -37,6 +49,30 @@ farm.post('/', verifyToken, (req, res) => {
       res.status(400).json({ error: error.message })
     }
     res.status(200).send(createdFarm)
+  })
+})
+
+farm.get('/:id', (req, res) => {
+  Farm.findById(req.params.id, (err, foundFarm) => {
+    if (err) {
+      res.status(400).json({
+        error: err
+      })
+    } else {
+      const items = []
+      Groceries.find({}, (err, groceries) => {
+        if (err) {
+          res.status(400).json({
+            error: err
+          })
+        } else {
+          res.status(200).json({
+            farm: foundFarm,
+            groceries: groceries
+          })
+        }
+      })
+    }
   })
 })
 
