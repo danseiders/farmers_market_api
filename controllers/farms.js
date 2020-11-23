@@ -1,5 +1,6 @@
 const express = require('express')
 const Farm = require('../models/farm')
+const User = require('../models/user')
 const Groceries = require('../models/groceries')
 const jwt = require('jsonwebtoken')
 const GroceryItem = require('../models/groceries')
@@ -21,17 +22,20 @@ const verifyToken = (req, res, next) => {
 
 //Index
 farm.get('/', (req, res) => {
-  Farm.find({}, (error, foundFarm) => {
+  User.find({}, (error, foundFarm) => {
     if(error){
       res.status(400).json({error: error.message})
-    }
-    Groceries.find({}, (err, grocereyItem) => {
-      res.status(200).json({
-        farm: foundFarm,
-        groceries: grocereyItem
+    } else {
+      foundFarm.forEach(farm => {
+        farm.password = ''
       })
-
-    })
+      Groceries.find({}, (err, grocereyItem) => {
+        res.status(200).json({
+          farm: foundFarm,
+          groceries: grocereyItem
+        })
+      })
+    }
 })
 })
 
