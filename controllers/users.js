@@ -94,7 +94,22 @@ users.post('/new', (req, res) => {
         if (err) {
           res.status(400).json({ error: err })
         } else {
-          res.status(200).json({ newUser: createdUser })
+
+          const user = {
+            id: createdUser._id,
+            displayName: createdUser.displayName,
+            email: createdUser.email
+          }
+
+          jwt.sign({ user }, process.env.TOKEN_SECRET, (err, token) => {
+            if (err) {
+              res.status(400).json({ error: err })
+            } else {
+              res.status(200).json({ 
+                newUser: createdUser,
+                token: token })
+            }
+          })
         }
       })
     }
