@@ -34,3 +34,11 @@ This is part of the third project for General Assembly's Software Engineering In
 ### Authentication
 
 This app uses `JSON Web Tokens` to verify user identity.
+
+### Links
+
+[Live Site](http://farm-stan-client.herokuapp.com/)
+
+[Client Repo](https://github.com/danseiders/farmers_market_client)
+
+[Server Repo](https://github.com/danseiders/farmers_market_api)
