@@ -8,10 +8,10 @@ This is part of the third project for General Assembly's Software Engineering In
 
 ## Contributors
 
-Charles Desiderio
-Spencer Haugh
-Aaron Luing
-Dan Seiders
+#### [Charles Desiderio](https://www.github.com)
+#### [Spencer Haugh](https://www.github.com)
+#### [Aaron Luing](https://www.github.com)
+#### [Dan Seiders](https://www.github.com)
 
 ## Code Overview
 
